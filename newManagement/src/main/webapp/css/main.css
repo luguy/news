@@ -464,7 +464,7 @@ input,select{
 
 .add_Account_c{
     width: 360px;
-    height: 280px;
+    height: 400px;
     background-color: #fff;
     position: fixed;
     left: 45%;
@@ -559,7 +559,7 @@ input,select{
 }
 
 #user_column .add_Account_c{
-    height: 320px;
+    height: 420px;
 }
 
 .column_now{

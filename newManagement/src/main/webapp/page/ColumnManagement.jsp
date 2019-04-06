@@ -16,8 +16,11 @@
             <div class="AccountManagement_c" id="ColumnManagement_c">
                 <h3>栏目管理 
                     <div class="amcl fr">
-                        <input type="text" placeholder="栏目名称" class="fl" name="">
-                        <div class="search fl"><img src="<%=request.getContextPath()%>/images/search.png"></div>
+                    
+	                    <form action="${pageContext.request.contextPath }/column_listcondition.do?currentPage=1" method="post" id="condition">
+                        	<input type="text" placeholder="栏目名称" class="fl" name="cname">
+                        	<div class="search fl" id="search"><img src="<%=request.getContextPath()%>/images/search.png"></div>
+                    	</form>
                     </div> 
                 </h3>
                 <div class="AM_ct text_center">
@@ -32,20 +35,22 @@
                     <ul class="list_h">
                         <li class="b20"><label>序号</label></li>
                         <li class="b20"><label>栏目名称</label></li>
-                        <li class="b60"><label>栏目主编</label></li>
+                        <li class="b20"><label>栏目创建人</label></li>
+                        <li class="b40"><label>栏目描述</label></li>
                     </ul>
                     <div class="list_b_c">
-                    	<c:forEach items="${list }" var="column">
+                    	<c:forEach items="${pageBean.list }" var="column">
 	                        <ul class="list_b">
-								   <input type="hidden" name="cids" value="${column.cid }"/>
-		                           <li class="b20"><label><input type="checkbox" name="cchecks"><span name="nums"}">${column.num }</span></label></li>
+								   <input type="hidden" name="cids" value="${column.id }"/>
+		                           <li class="b20"><label><input type="checkbox" name="checks"><span name="nums"}">${column.num }</span></label></li>
 		                           <li class="b20"><label name="cnames">${column.cname }</label></li>
-		                           <li class="b60"><label name="usernames">${column.username }</label></li>
+		                           <li class="b20"><label name="unames">${column.username }</label></li>
+		                           <li class="b40"><label name="descriptors">${column.cdescriptor }</label></li>
 		                    </ul>
 	                    </c:forEach>
                     </div>
 
-                    <div class="pull_page">
+                    <!-- <div class="pull_page">
                         <div class="fl pull_page_up">上一页</div>
                             <ul>
                                 <li class="on">1</li>
@@ -56,8 +61,37 @@
                                 <li>12</li>
                             </ul>
                         <div class="fl pull_page_down">下一页</div>
-                    </div>
+                    </div> -->
 
+
+					<c:if test="${pageBean.totalPage!=0}">
+	                    <div class="pull_page">
+							<c:if test="${pageBean.currentPage!=1}">
+		                        <form id="up" action="${pageContext.request.contextPath }/column_listpage.do?currentPage=${pageBean.currentPage-1}" method="post">
+		                        	<%-- <input type="hidden" class="like" name="username" value="${pageBean.name }"> --%>
+		                        	<div class="fl pull_page_up">上一页</div>
+		                        </form>
+		                    </c:if>
+	                            <ul>
+	                            	<form action="${pageContext.request.contextPath }/column_listpage.do?" id="pageindex" method="post">
+		                            	<input type="hidden" name="currentPage" id="cp"/>
+		                            	<c:forEach var="s" begin="1" end="${pageBean.totalPage-1}">
+		                            		<c:choose>
+			                            		<c:when test="${s>1}"><li>${s }</li></c:when>
+				                                <c:otherwise  ><li class="on">1</li></c:otherwise>
+			                                </c:choose>
+		                                </c:forEach>
+		                                <c:if test="${pageBean.totalPage>10}"><li class="pull_page_df_btn">…</li></c:if> 
+		                                <li>${pageBean.totalPage}</li>
+		                            </form>
+	                            </ul>
+	                        <c:if test="${pageBean.currentPage!=pageBean.totalPage&&pageBean.totalPage>1}">
+		                        <form id="down" action="${pageContext.request.contextPath }/column_listpage.do?currentPage=${pageBean.currentPage+1}" method="post">
+		                        	<div class="fl pull_page_down">下一页</div>
+		                        </form>
+		                    </c:if>
+                    	</div>
+					</c:if>
                     
                 </div>
             </div>
@@ -73,12 +107,14 @@
                 </div>
             </div>
             
-             <form action="${pageContext.request.contextPath }/column_add.action" method="post" id="addcolumn">
+             <form action="${pageContext.request.contextPath }/column_add.do" method="post" id="addcolumn">
+             	<input type="hidden" name="uid" value="${select_user.id }" />
+             	<input type="hidden" name="username" value="${select_user.username }" />
 	            <div class="user_name user_i">
 	                <label>栏目名</label> <input type="text" placeholder="输入栏目名" name="cname">     
 	            </div>
 	            <div class="user_name user_i">
-	                <label>主编名</label> <input type="text" placeholder="输入主编名" name="username">     
+	                <label>栏目描述</label> <input type="text" placeholder="输入栏目描述 " name="cdescriptor">     
 	            </div>
 	            <div class="add_Account_ok_btn text_center" id="add_column_ok_btn">确<i>皮</i>定</div>
             </form>
@@ -95,13 +131,13 @@
                 </div>
             </div>
             
-            <form action="${pageContext.request.contextPath }/column_update.action" method="post" id="updatecolumn">
-	            <input type="hidden" name="cid" class="cid" />
+            <form action="${pageContext.request.contextPath }/column_update.do" method="post" id="updatecolumn">
+	            <input type="hidden" name="id" class="cid" />
 	            <div class="user_name user_i">
 	                <label>栏目名</label> <input type="text" id="colname" placeholder="输入栏目名" name="cname">     
 	            </div>
 	            <div class="user_password user_i">
-	                <label>主编名</label> <input type="text" placeholder="输入主编名" id="coluser" name="username">     
+	                <label>栏目描述</label> <input type="text" placeholder="输入栏目描述" id="coldescr" name="cdescriptor">     
 	            </div>
 	            <div class="add_Account_ok_btn text_center" id="edit_column_ok_btn">确<i>皮</i>定</div>
             </form>
@@ -118,8 +154,8 @@
                 </div>
             </div>
             
-            <form action="${pageContext.request.contextPath }/column_delete.action" method="post" id="deletecolumn">
-	            <input type="hidden" name="cid" class="cid" />
+            <form action="${pageContext.request.contextPath }/column_delete.do" method="post" id="deletecolumn">
+	            <input type="hidden" name="id" class="cid" />
 	            <div class="delete_text">确定删除“ <span class="columnname"></span> ”栏目吗？</div>
 	            <div class="add_Account_ok_btn text_center" id="delete_column_ok_btn">确<i>皮</i>定</div>
 	        </form>

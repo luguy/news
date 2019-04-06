@@ -19,7 +19,7 @@
             <img src="images/tit.png">
            <div class="quit text_center" id="quit_login">安全退出</div>
         </div>
-        <form action="user_quit.do" method="post" id="quit_user"></form>
+        <form action="exit_login.do" method="post" id="quit_user"></form>
         
     </div>
 

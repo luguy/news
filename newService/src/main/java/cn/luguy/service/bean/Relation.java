@@ -8,6 +8,14 @@ public class Relation {
 	private int uid;
 	private int cid;
 	private Date createDate;
+	private String cname;
+	
+	public String getCname() {
+		return cname;
+	}
+	public void setCname(String cname) {
+		this.cname = cname;
+	}
 	public int getId() {
 		return id;
 	}

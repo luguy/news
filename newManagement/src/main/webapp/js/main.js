@@ -12,7 +12,7 @@ $(function(){
         $(".AccountManagement_c_iframe iframe").attr("src","user_listpage.do?currentPage=1")
     })
     $(".ColumnManagement").click(function(){
-        $(".AccountManagement_c_iframe iframe").attr("src","user_listpage.do?currentPage=1")
+        $(".AccountManagement_c_iframe iframe").attr("src","column_listpage.do?currentPage=1")
     })
     $(".NewsManagement").click(function(){
         $(".AccountManagement_c_iframe iframe").attr("src","user_listpage.do?currentPage=1")
@@ -69,7 +69,8 @@ $(function(){
     	var checks=document.getElementsByName("checks");
         var names=document.getElementsByName("names");
         var ids=document.getElementsByName("ids");
-        var pwds=document.getElementsByName("pwds");
+        var accounts=document.getElementsByName("accounts");
+        var levels=document.getElementsByName("levels");
         var c=new Array();
         var u=new Array();
         for(var i=0;i<checks.length;i++){
@@ -77,7 +78,8 @@ $(function(){
         		c.push(checks[i].value);
         		u.push(ids[i].value);
         		u.push(names[i].innerText);
-        		u.push(pwds[i].innerText);
+        		u.push(accounts[i].innerText);
+        		u.push(levels[i].innerText);
         	}
         }
         if(c.length>1){
@@ -90,9 +92,11 @@ $(function(){
         }
        
         $(".uid").val(u[0]);
+        $(".uname").empty();
         $(".uname").append(u[1]);
         $("#uname").val(u[1]);
-        $("#upwd").val(u[2]);
+        $("#uaccount").val(u[2]);
+        $("#ulevel").val(u[3]);
     	$("#user_column").fadeIn(100);
     })
     //删除账户
@@ -120,33 +124,11 @@ $(function(){
         }
        
         $(".uid").val(u[0]);
+        $(".uname").empty();
         $(".uname").append(u[1]);
         $("#delete_Account").fadeIn(100);
     })
-    // 账户授权
-    /*$("#ac_Account_btn").click(function(){
-    	var checks=document.getElementsByName("checks");
-    	var ids=document.getElementsByName("ids");
-    	var u=new Array();
-        var c=new Array();
-        for(var i=0;i<checks.length;i++){
-        	if(checks[i].checked==true){
-        		c.push(checks[i].value);
-        		u.push(ids[i].value);
-        	}
-        }
-        if(c.length>1){
-        	alert("你选的太多了，请选择一条记录！");
-        	return;
-        }
-        if(c.length==0){
-        	alert("请选择一条记录！")
-        	return;
-        }
-        $(".uid").val(u[0]);
-        location.href = 'user_find.action?uid='+u[0];
-    	$("#ac_Account").fadeIn(100);
-    })*/
+   
 
 
     // 栏目管理 
@@ -156,10 +138,10 @@ $(function(){
     // 编辑栏目
     $("#edit_column_btn").click(function(){
     	
-    	var checks=document.getElementsByName("cchecks");
+    	var checks=document.getElementsByName("checks");
         var cnames=document.getElementsByName("cnames");
         var cids=document.getElementsByName("cids");
-        var usernames=document.getElementsByName("usernames");
+        var descriptors=document.getElementsByName("descriptors");
         var c=new Array();
         var u=new Array();
         for(var i=0;i<checks.length;i++){
@@ -167,7 +149,7 @@ $(function(){
         		c.push(checks[i].value);
         		u.push(cids[i].value);
         		u.push(cnames[i].innerText);
-        		u.push(usernames[i].innerText);
+        		u.push(descriptors[i].innerText);
         	}
         }
         if(c.length>1){
@@ -181,12 +163,12 @@ $(function(){
        
         $(".cid").val(u[0]);
         $("#colname").val(u[1]);
-        $("#coluser").val(u[2]);
+        $("#coldescr").val(u[2]);
         $("#edit_column").fadeIn(100);
     })
     // 删除栏目
     $("#delete_column_btn").click(function(){
-    	var checks=document.getElementsByName("cchecks");
+    	var checks=document.getElementsByName("checks");
         var cnames=document.getElementsByName("cnames");
         var cids=document.getElementsByName("cids");
         var c=new Array();
@@ -209,6 +191,7 @@ $(function(){
         
        
         $(".cid").val(u[0]);
+        $(".columnname").empty();
         $(".columnname").append(u[1]);
     	$("#delete_column").fadeIn(100);
     })
@@ -265,24 +248,29 @@ $(function(){
     })
     $("#ac_Account_ok_btn").click(function(){
     	var cids=document.getElementsByName("colid");
+    	var uids=document.getElementsByName("coluid");
+    	var cnames=document.getElementsByName("colname");
     	var checks=document.getElementsByName("check1");
     	var u=new Array();
-        var c=new Array();
+    	var n=new Array();
+    	var c=new Array();
+        var k=new Array();
         for(var i=0;i<checks.length;i++){
         	if(checks[i].checked==true){
-        		c.push(checks[i].value);
-        		u.push(cids[i].value);
+        		k.push(checks[i].value);
+        		u.push(uids[i].value);
+        		c.push(cids[i].value);
+        		n.push(cnames[i].innerHTML);
         	}
         }
-        if(c.length>1){
-        	alert("你选的太多了，请选择一条记录！");
-        	return;
-        }
-        if(c.length==0){
+        if(k.length==0){
         	alert("请选择一条记录！")
         	return;
         }
-        $("#cid").val(u[0]);
+        for(var i=0;i<u.length;i++){
+        	$("#authorization").append("<input type='hidden' name='list["+i+"].cid' value="+c[i]+" /><input type='hidden' name='list["+i+"].uid' value="+u[i]+" />"
+    				+"<input type='hiden' name='list["+i+"].cname' value="+n[i]+">");
+        }
     	$("#authorizationuser").submit();
         $("#ac_Account").fadeOut(100);
     })
@@ -307,9 +295,7 @@ $(function(){
    $(".pull_page_down").click(function(){
     	$("#down").submit();
     })
-   $("#searchUser").click(function(){
-	   /*	var name=document.getElementById("searchu");
-	   	$(".like").val(name.value);*/
+   $("#search").click(function(){
     	$("#condition").submit();
     })
    $("#add_news_ok_btn").click(function(){

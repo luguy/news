@@ -1,22 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.luguy.service.mapper.UserMapper">
+<mapper namespace="cn.luguy.service.mapper.RelationMapper">
 
-	<select id="get_byid" parameterType="cn.luguy.service.bean.User"
+	<insert id="add_relation" parameterType="java.util.List">
+		insert into t_relation_c_u(
+		uid,
+		cid,
+		cname
+		)
+		values
+		 <foreach collection="list" item="item" index="index" separator="," >  
+        	(
+				${item.uid},
+				${item.cid},
+				#{item.cname}
+			)  
+    	</foreach>
+	</insert>
+
+	<select id="get_byuid" parameterType="int"
+		resultType="cn.luguy.service.bean.Relation">
+		select * from t_relation_c_u where uid=${value}
+	</select>
+	
+	<delete id="delete_relation" parameterType="Map">
+		delete from t_relation_c_u where ${subSql}
+	</delete>
+<!-- 	<select id="get_byid" parameterType="cn.luguy.service.bean.User"
 		resultType="cn.luguy.service.bean.User">
 		select * from t_user where id=${id}
 	</select>
 
 	<select id="get_listpage" parameterType="Map"
-		resultType="cn.luguy.service.bean.UserRelation">
-		select u.*,group_concat(r.cname) as relations 
-		from t_user u left join t_relation_c_u  r on u.id=r.uid 
-		where (u.id=${id} or u.level>${level}) ${subSql} 
-		group by u.id limit #{begin},  #{pageSize}
+		resultType="cn.luguy.service.bean.User">
+		
+		select * from t_user ${subSql} limit  #{begin},  #{pageSize}
 	</select>
 
 	<select id="find_count" parameterType="Map" resultType="int">
-		select count(*) from t_user where (id=${id} or level>${level}) ${subSql}
+		select count(*) from t_user ${subSql}
 		
 	</select>
 	
@@ -47,7 +69,7 @@
 	
 	<delete id="delete_user" parameterType="cn.luguy.service.bean.User">
 		delete from t_user where id=${id}
-	</delete>
+	</delete> -->
 
 
 </mapper>

@@ -1,5 +1,7 @@
 package cn.luguy.back.controller;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -12,5 +14,10 @@ public class MainController {
 		return "main";
 	}
 	
+	@RequestMapping("exit_login")
+	public String exit_login(HttpSession session) {
+		session.invalidate();
+		return "redirect:/goto_login.do";
+	}
 	
 }
